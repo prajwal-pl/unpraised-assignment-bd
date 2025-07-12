@@ -7,6 +7,11 @@ const prisma = new PrismaClient();
 export const getGadgetsHandler = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
     const gadgets = await prisma.gadget.findMany({
       where: {
         userId,
@@ -31,6 +36,10 @@ export const getGadgetsByStatusHandler = async (
   try {
     const { status } = req.query;
     const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
     if (!status) {
       return res.status(400).json({ message: "Status is required" });
@@ -113,6 +122,10 @@ export const updateGadgetHandler = async (req: Request, res: Response) => {
     const { name, status } = req.body;
     const userId = req.userId;
 
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
     if (!name && !status) {
       return res.status(400).json({ message: "Name or status is required" });
     }
@@ -139,6 +152,10 @@ export const deleteGadgetHandler = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
     const deletedGadget = await prisma.gadget.update({
       where: {
@@ -167,6 +184,14 @@ export const selfDestructGadgetHandler = async (
     const { id } = req.params;
     const userId = req.userId;
     const { secret } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    if (!secret) {
+      return res.status(400).json({ message: "Secret is required" });
+    }
 
     if (secret !== process.env.SELF_DESTRUCT_SECRET) {
       return res.status(403).json({
