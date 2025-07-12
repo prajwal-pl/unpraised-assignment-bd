@@ -69,6 +69,14 @@ export const createGadgetHandler = async (req: Request, res: Response) => {
     const { status } = req.body;
     const userId = req.userId;
 
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    if (!status) {
+      return res.status(400).json({ message: "Status is required" });
+    }
+
     const name = await randomNameGenerator();
 
     if (!name) {
@@ -77,10 +85,17 @@ export const createGadgetHandler = async (req: Request, res: Response) => {
         .json({ message: "Failed to generate gadget name" });
     }
 
+    if (!Object.values(Status).includes(status.toUpperCase() as Status)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid status value! Insert a valid status." });
+    }
+    const Ustatus = status.toUpperCase() as Status;
+
     const newGadget = await prisma.gadget.create({
       data: {
         name,
-        status: status || Status.AVAILABLE,
+        status: Ustatus || Status.AVAILABLE,
         userId,
       },
     });
