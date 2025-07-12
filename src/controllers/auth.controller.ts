@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
 import { compare, hash } from "bcrypt";
 import jwt from "jsonwebtoken";
+import { PrismaClient } from "../generated/prisma/index.js";
 
 const prisma = new PrismaClient();
 
@@ -72,9 +72,13 @@ export const registerHandler = async (req: Request, res: Response) => {
       },
     });
 
+    const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET!, {
+      expiresIn: "3d",
+    });
+
     return res
       .status(201)
-      .json({ message: "User registered successfully", user: newUser });
+      .json({ message: "User registered successfully", user: newUser, token });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
