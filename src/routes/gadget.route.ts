@@ -2,8 +2,6 @@ import express from "express";
 import { authMiddleware } from "../middleware/middleware.js";
 import {
   createGadgetHandler,
-  getGadgetsHandler,
-  getGadgetsByStatusHandler,
   selfDestructGadgetHandler,
   getGadgetConfigHandler,
 } from "../controllers/gadget.controller.js";
