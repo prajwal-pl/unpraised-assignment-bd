@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PrismaClient, Status } from "../generated/prisma/index.js";
+import { PrismaClient, Status } from "@prisma/client";
 import { randomNameGenerator } from "../lib/ai.js";
 
 const prisma = new PrismaClient();
@@ -45,7 +45,9 @@ export const getGadgetsByStatusHandler = async (
       return res.status(400).json({ message: "Status is required" });
     }
 
-    if (!(status.toString().toUpperCase() in Object.values(Status))) {
+    if (
+      !Object.values(Status).includes(status.toString().toUpperCase() as Status)
+    ) {
       return res.status(400).json({ message: "Invalid status value" });
     }
 
@@ -67,6 +69,21 @@ export const getGadgetsByStatusHandler = async (
     }
 
     return res.status(200).json(gadgets);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getGadgetConfigHandler = async (req: Request, res: Response) => {
+  try {
+    const { status } = req.query;
+
+    if (status) {
+      return getGadgetsByStatusHandler(req, res);
+    } else {
+      return getGadgetsHandler(req, res);
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });

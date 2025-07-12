@@ -5,12 +5,12 @@ import {
   getGadgetsHandler,
   getGadgetsByStatusHandler,
   selfDestructGadgetHandler,
+  getGadgetConfigHandler,
 } from "../controllers/gadget.controller.js";
 
 const router = express.Router();
 
-router.get("/", authMiddleware, getGadgetsHandler);
-router.get("/", authMiddleware, getGadgetsByStatusHandler);
+router.get("/", authMiddleware, getGadgetConfigHandler);
 router.post("/", authMiddleware, createGadgetHandler);
 router.post("/:id/self-destruct", authMiddleware, selfDestructGadgetHandler);
 router.patch("/:id", authMiddleware);
