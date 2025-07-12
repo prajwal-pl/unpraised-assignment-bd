@@ -1,4 +1,4 @@
-# 🕶️ Phoenix: IMF Gadget API Development Challenge
+# Phoenix: IMF Gadget API Development Challenge
 
 **Mission Status: ✅ ACCOMPLISHED**
 
